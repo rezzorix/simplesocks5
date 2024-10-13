@@ -1,3 +1,0 @@
-user1:CL:password1
-user2:CL:password2
-user3:CL:password3

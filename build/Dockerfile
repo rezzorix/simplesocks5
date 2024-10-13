@@ -14,8 +14,8 @@ RUN apk add --no-cache alpine-sdk wget tar && \
   apk del alpine-sdk
 
 # Copy the config files
-COPY 3proxy.cfg /etc/3proxy/3proxy.cfg
-COPY users.txt /etc/3proxy/users.txt
+#COPY 3proxy.cfg /etc/3proxy/3proxy.cfg
+#COPY users.txt /etc/3proxy/users.txt
 
 # Expose the SOCKS5 proxy port
 EXPOSE 1080
