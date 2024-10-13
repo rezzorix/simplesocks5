@@ -1,6 +1,6 @@
 services:
   socks5-proxy:
-    image: ghcr.io/rezzorix/simplesocks5:latest  # Use the pre-built image from GitHub Container Registry
+    build: .
     ports:
       - "1080:1080"
     volumes:
