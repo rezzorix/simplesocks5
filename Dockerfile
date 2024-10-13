@@ -1,19 +1,24 @@
-# Stage 1: Build stage using Alpine
-FROM alpine:latest as build
+# Base image: Alpine Linux
+FROM alpine:latest
 
-# Install dante and dependencies
-RUN apk --no-cache add dante-server
+# Install necessary packages (Dante and other dependencies)
+RUN apk --no-cache add dante-server shadow
 
-# Stage 2: Minimal image
-FROM scratch
+# Create a user for the proxy
+RUN adduser -S dante
 
-# Copy necessary binaries from Alpine
-COPY --from=build /usr/sbin/danted /usr/sbin/danted
-COPY --from=build /etc/danted.conf /etc/danted.conf
+# Add a script to create users from environment variables
+COPY danted.conf /etc/danted.conf
+COPY create_user.sh /usr/local/bin/create_user.sh
+RUN chmod +x /usr/local/bin/create_user.sh
 
-# Expose the port for SOCKS5
+# Copy manage_users.sh into the container
+COPY manage_users.sh /usr/local/bin/manage_users.sh
+RUN chmod +x /usr/local/bin/manage_users.sh
+
+# Expose SOCKS5 port (default 1080)
 EXPOSE 1080
 
-# Run Dante SOCKS5 server
-CMD ["/usr/sbin/danted", "-f", "/etc/danted.conf"]
+# Set entrypoint to create users and start dante
+ENTRYPOINT ["/usr/local/bin/create_user.sh"]
 
