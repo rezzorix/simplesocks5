@@ -5,5 +5,4 @@ services:
       - "1080:1080"
     volumes:
       - ./3proxy.cfg:/etc/3proxy/3proxy.cfg
-      - ./users.txt:/etc/3proxy/users.txt
     restart: unless-stopped
