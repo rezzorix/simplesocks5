@@ -1,24 +1,24 @@
-# Base image: Alpine Linux
 FROM alpine:latest
 
-# Install necessary packages (Dante and other dependencies)
-RUN apk --no-cache add dante-server shadow
+# Specify the latest 3proxy version (check for latest release on GitHub)
+ENV THREEPROXY_VERSION=0.9.4
 
-# Create a user for the proxy
-RUN adduser -S dante
+# Install 3proxy to /usr/local/bin
+RUN apk add --no-cache alpine-sdk wget tar && \
+  export DIR=$(mktemp -d) && cd $DIR && \
+  wget https://github.com/3proxy/3proxy/archive/refs/tags/${THREEPROXY_VERSION}.tar.gz && tar -xf ${THREEPROXY_VERSION}.tar.gz && mv 3proxy* 3proxy && \
+  cd 3proxy && \
+  make -f Makefile.Linux WITH_SSL=yes WITH_POLL=yes && \
+  mv bin/3proxy /usr/local/bin/ && \
+  cd && rm -rf $DIR && \
+  apk del alpine-sdk
 
-# Add a script to create users from environment variables
-COPY danted.conf /etc/danted.conf
-COPY create_user.sh /usr/local/bin/create_user.sh
-RUN chmod +x /usr/local/bin/create_user.sh
+# Copy the config files
+COPY 3proxy.cfg /etc/3proxy/3proxy.cfg
+COPY users.txt /etc/3proxy/users.txt
 
-# Copy manage_users.sh into the container
-COPY manage_users.sh /usr/local/bin/manage_users.sh
-RUN chmod +x /usr/local/bin/manage_users.sh
-
-# Expose SOCKS5 port (default 1080)
+# Expose the SOCKS5 proxy port
 EXPOSE 1080
 
-# Set entrypoint to create users and start dante
-ENTRYPOINT ["/usr/local/bin/create_user.sh"]
-
+# Start 3proxy on container startup
+CMD ["3proxy", "/etc/3proxy/3proxy.cfg"]
