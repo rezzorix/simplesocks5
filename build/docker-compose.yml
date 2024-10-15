@@ -1,5 +1,5 @@
 services:
-  socks5-proxy:
+  simplesocks5:
     build:
       context: .
       dockerfile: Dockerfile.debian  # build using Debian

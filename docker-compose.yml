@@ -1,5 +1,5 @@
 services:
-  socks5-proxy:
+  simplesocks5:
     image: ghcr.io/rezzorix/simplesocks5:latest  # latest is always the latest Debian based image
 #    image: ghcr.io/rezzorix/simplesocks5:debian-latest  # the latest Debian based image
 #    image: ghcr.io/rezzorix/simplesocks5:alpine-latest  # the latest alpine based image
