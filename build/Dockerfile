@@ -1,4 +1,3 @@
-# Builder stage: Build 3proxy on Debian slim
 FROM debian:bookworm-slim AS builder
 
 # Define the 3proxy version as an environment variable
@@ -9,26 +8,39 @@ ARG TARGETPLATFORM
 RUN echo "Building for target platform: $TARGETPLATFORM"
 
 # Step 1: Install necessary build dependencies and download 3proxy source code
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential wget tar ca-certificates && \
+RUN set -ex && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    wget \
+    tar \
+    ca-certificates && \
+    echo "Dependencies installed successfully" && \
     export DIR=$(mktemp -d) && cd $DIR && \
     wget https://github.com/3proxy/3proxy/archive/refs/tags/${THREEPROXY_VERSION}.tar.gz && \
+    echo "Downloaded 3proxy source" && \
     tar -xf ${THREEPROXY_VERSION}.tar.gz && mv 3proxy* 3proxy && \
-    cd 3proxy && make -f Makefile.Linux WITH_SSL=yes WITH_POLL=yes && \
+    cd 3proxy && \
+    echo "Building 3proxy..." && \
+    make -f Makefile.Linux WITH_SSL=yes WITH_POLL=yes && \
     mv bin/3proxy /usr/local/bin/3proxy && \
-    cd && rm -rf $DIR && \
-    apt-get purge -y build-essential wget tar && apt-get autoremove -y && apt-get clean && \
-    echo "3proxy built successfully and moved to /usr/local/bin"
+    echo "3proxy built successfully and moved to /usr/local/bin" && \
+    cd && rm -rf $DIR
 
-# Final stage: Minimal runtime environment with 3proxy
+# Clean up build dependencies in a separate step
+RUN set -ex && \
+    apt-get purge -y build-essential wget tar && \
+    apt-get autoremove -y && apt-get clean
+
+# Final stage
 FROM debian:bookworm-slim
 
-# Copy 3proxy binary from the builder stage
+# Copy the 3proxy binary from the builder stage
 COPY --from=builder /usr/local/bin/3proxy /usr/local/bin/3proxy
 
-# Install ca-certificates and clean up unnecessary files
+# Install ca-certificates for SSL support and clean up unnecessary files
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Expose the SOCKS5 proxy port
 EXPOSE 1080
