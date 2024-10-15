@@ -1,11 +1,14 @@
 # SimpleSocks5
 
-**SimpleSocks5** is a lightweight SOCKS5 proxy server built with [3proxy](https://github.com/3proxy/3proxy).  
-It is based on Debian Bookworm "slim" to ensure minimal image size while maintaining maximum compatibility.
+**SimpleSocks5** is a lightweight Docker container running [3proxy](https://github.com/3proxy/3proxy), a SOCKS5 proxy server.  
+This container comes in two versions:
 
-For those looking for an even smaller image, an Alpine-based version is available.  
-However, please note that the Alpine version may not work on certain devices, such as Raspberry Pi 3.  
-In those cases, the Debian-based image is recommended for better compatibility.
+- **Debian-based**: Built on Debian Bookworm "slim," offering broad compatibility with various systems while keeping the image size reasonably small.
+- **Alpine-based**: For those looking for a minimal image size, the Alpine version offers a significantly smaller footprint, though it may not work on all devices (e.g., Raspberry Pi 3).
+
+The container provides SOCKS5 proxy functionality with user authentication via a configurable `3proxy.cfg` file.  
+The **Debian-based version** is recommended for most users due to its better compatibility.
+
 
 ## Features
 
