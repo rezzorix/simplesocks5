@@ -21,3 +21,4 @@ EXPOSE 1080
 
 # Start 3proxy on container startup
 CMD ["3proxy", "/etc/3proxy/3proxy.cfg"]
+
