@@ -26,10 +26,9 @@ RUN set -ex && \
     echo "3proxy built successfully and moved to /usr/local/bin" && \
     cd && rm -rf $DIR
 
-# Clean up build dependencies in a separate step
-RUN set -ex && \
-    apt-get purge -y build-essential wget tar && \
-    apt-get autoremove -y && apt-get clean
+# Just clean the package cache, no purging
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Final stage
 FROM debian:bookworm-slim
