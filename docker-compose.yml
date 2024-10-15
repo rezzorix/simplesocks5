@@ -1,6 +1,8 @@
 services:
   socks5-proxy:
-    image: ghcr.io/rezzorix/simplesocks5:latest  # Use the latest pre-built image from GitHub Container Registry
+    image: ghcr.io/rezzorix/simplesocks5:latest  # latest is always the latest Debian based image
+#    image: ghcr.io/rezzorix/simplesocks5:debian-latest  # the latest Debian based image
+#    image: ghcr.io/rezzorix/simplesocks5:alpine-latest  # the latest alpine based image
     container_name: simplesocks5
     ports:
       - "1080:1080"
