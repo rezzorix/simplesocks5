@@ -1,4 +1,4 @@
-FROM alpine:latest AS builder
+FROM debian:bullseye-slim AS builder
 
 ENV THREEPROXY_VERSION=0.9.4
 
