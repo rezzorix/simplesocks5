@@ -21,11 +21,6 @@ RUN export DIR=$(mktemp -d) && cd $DIR && \
     mv bin/3proxy /usr/local/bin/ && \
     echo "3proxy built successfully and moved to /usr/local/bin"
 
-# Step 3: Clean up
-RUN apt-get remove --purge -y build-essential wget tar && \
-    apt-get autoremove -y && apt-get clean && \
-    echo "Cleaned up build dependencies"
-
 # Final stage
 FROM debian:bookworm-slim
 
@@ -34,6 +29,11 @@ COPY --from=builder /usr/local/bin/3proxy /usr/local/bin/3proxy
 
 # Expose the SOCKS5 proxy port
 EXPOSE 1080
+
+# Clean up unnecessary dependencies in the final stage
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Run 3proxy
 CMD ["3proxy", "/etc/3proxy/3proxy.cfg"]
