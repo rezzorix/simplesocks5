@@ -1,0 +1,28 @@
+FROM alpine:latest AS builder
+
+ENV THREEPROXY_VERSION=0.9.4
+
+# Install necessary build dependencies and download 3proxy source code
+RUN apk add --no-cache \
+    build-base \
+    wget \
+    tar \
+    openssl-dev && \
+    export DIR=$(mktemp -d) && cd $DIR && \
+    wget https://github.com/3proxy/3proxy/archive/refs/tags/${THREEPROXY_VERSION}.tar.gz && \
+    tar -xf ${THREEPROXY_VERSION}.tar.gz && mv 3proxy* 3proxy && \
+    cd 3proxy && \
+    make -f Makefile.Linux WITH_SSL=yes WITH_POLL=yes && \
+    mv bin/3proxy /usr/local/bin/3proxy && \
+    cd && rm -rf $DIR
+
+FROM alpine:latest
+
+COPY --from=builder /usr/local/bin/3proxy /usr/local/bin/3proxy
+
+RUN apk add --no-cache ca-certificates && \
+    rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+
+EXPOSE 1080
+
+CMD ["3proxy", "/etc/3proxy/3proxy.cfg"]
