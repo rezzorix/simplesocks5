@@ -20,8 +20,7 @@ FROM alpine:3.22
 
 COPY --from=builder /usr/local/bin/3proxy /usr/local/bin/3proxy
 
-RUN apk add --no-cache ca-certificates && \
-    rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+RUN apk add --no-cache ca-certificates
 
 EXPOSE 1080
 
