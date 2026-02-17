@@ -4,8 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "Dockerfile"
-      - "entrypoint.sh"
+      - "build/**"
       - ".github/workflows/docker-build.yml"
   schedule:
     - cron: "0 0 * * 0"
@@ -39,7 +38,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./build/Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
           push: true
           tags: |
