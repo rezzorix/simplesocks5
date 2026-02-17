@@ -1,6 +1,6 @@
 FROM alpine:latest AS builder
 
-ENV THREEPROXY_VERSION=0.9.4
+ENV THREEPROXY_VERSION=0.9.5
 
 # Install necessary build dependencies and download 3proxy source code
 RUN apk add --no-cache \
