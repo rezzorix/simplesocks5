@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 
-: "${PROXY_USER:?Missing PROXY_USER}"
-: "${PROXY_PASSWORD:?Missing PROXY_PASSWORD}"
+: "${PROXY_USER:?PROXY_USER not set}"
+: "${PROXY_PASSWORD:?PROXY_PASSWORD not set}"
 
 mkdir -p /etc/3proxy
 
