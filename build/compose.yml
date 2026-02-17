@@ -2,8 +2,7 @@ services:
   simplesocks5:
     build:
       context: .
-      dockerfile: Dockerfile.debian  # build using Debian
-#      dockerfile: Dockerfile.alpine # build using alpine
+      dockerfile: Dockerfile.alpine # build using alpine
     ports:
       - "1080:1080"
     volumes:
