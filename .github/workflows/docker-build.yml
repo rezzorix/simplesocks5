@@ -3,6 +3,9 @@ name: Build and Push Docker Image
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "build/**"
+      - ".github/workflows/docker-build.yml"
   schedule:
     - cron: "0 0 * * 0"
 
@@ -13,6 +16,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -27,8 +31,8 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./build/Dockerfile
+          context: ./build
+          file: Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
           push: true
           tags: |
