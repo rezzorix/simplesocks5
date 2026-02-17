@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim AS builder
 
 # Define the 3proxy version as an environment variable
-ENV THREEPROXY_VERSION=0.9.4
+ENV THREEPROXY_VERSION=0.9.5
 
 # Make the TARGETPLATFORM argument available for the build stage
 ARG TARGETPLATFORM
