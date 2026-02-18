@@ -1,72 +1,81 @@
 # SimpleSocks5
 
-**SimpleSocks5** is a lightweight Docker container running [3proxy](https://github.com/3proxy/3proxy), a SOCKS5 proxy server.  
+SimpleSocks5 is a lightweight Docker image running **3proxy** as a **SOCKS5 proxy server**, built on **Alpine Linux**.
 
-- **Alpine-based**: For those looking for a minimal image size, the Alpine version offers a significantly smaller footprint, though it may not work on all devices (e.g., Raspberry Pi 3).
+It is designed to be:
+- minimal
+- fast
+- predictable
+- suitable for running on multiple VPS nodes
 
-The container provides SOCKS5 proxy functionality with user authentication via a configurable `3proxy.cfg` file.  
 
-## Features
 
-- **Minimal image size**:  Based on Alpine, with the smallest size on Alpine.
-- **User authentication**: Easily configure users in the `3proxy.cfg` file.
-- **Cross-architecture support**: Available for multiple architectures.
+---
+
+- **Alpine-based**  
+  Small image size (~10 MB), minimal attack surface.
+
+- **3proxy (SOCKS5)**  
+  Native SOCKS5 proxy with username/password authentication.
+
+- **Multi-architecture**  
+  Built for common x86 and ARM platforms.
+
+- **Configuration via environment variables**  
+  No static `3proxy.cfg` required for basic usage.
+
+The image is built automatically via GitHub Actions and published to GHCR.
+
+---
 
 ## Supported Architectures
 
-The Docker images are available for the following architectures:
+The image is built for:
 
 - `linux/amd64`
 - `linux/arm64`
 - `linux/arm/v7`
 - `linux/arm/v6`
 
-## Tags and Versions
+---
 
-The Docker images are tagged as follows:
+## Available Images
 
-- **Alpine-based images**:
-  - `simplesocks5:alpine`
-  - `simplesocks5:latest`
+Images are published to GHCR:
+ghcr.io/rezzorix/simplesocks5:alpine
+ghcr.io/rezzorix/simplesocks5:latest
 
-## Usage
+## Basic Usage (Docker)
 
-To start the SimpleSocks5 container:
+Example `docker-compose.yml`:
 
-1. Clone the repository:
+```yaml
+services:
+  socks5:
+    image: ghcr.io/rezzorix/simplesocks5:latest
+    container_name: socks5
+    restart: unless-stopped
+    ports:
+      - "1080:1080"
+    environment:
+      PROXY_USER: yourusername
+      PROXY_PASSWORD: yourpassword
+```
 
-   ```bash
-   git clone https://github.com/rezzorix/simplesocks5.git
-   cd simplesocks5
+## Configuration Model
 
-2. Configure the 3proxy.cfg file:
+Authentication is enabled by default.
 
-Edit the 3proxy.cfg file to set up your user authentication.
+Credentials are provided via environment variables:
 
-3. Start the container using Docker Compose
-   ```bash
-   docker-compose up -d
+- PROXY_USER
+- PROXY_PASSWORD
 
-## Build your own image
+One user per container instance.
+For more advanced setups (ACLs, multiple users, chaining, etc.), the image can be extended with a custom 3proxy.cfg.
 
-Alternatively, if you prefer to build the image on your own:
+## Security Notes
 
-1. Go to the ./build directory and run:
-
-   ```bash
-    cd ./build
-    docker-compose build && docker-compose up -d
-
-This will build the image for your current architecture with Debian by default.
-
-Choosing a specific base image (Debian or Alpine) can be done by editing the ./build/docker-compose.yml:
-
-   - **To build with Debian**:
-   ```bash
-   dockerfile: Dockerfile.debian
-   ```
-
-   - **To build with Alpine**:
-   ```bash
-   dockerfile: Dockerfile.alpine
-   ```
+- SOCKS5 authentication is not encrypted by the protocol itself.
+- HTTPS/TLS at the application layer is expected.
+- Credentials act as access control, not confidentiality.
