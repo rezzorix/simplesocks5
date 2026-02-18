@@ -8,9 +8,7 @@ It is designed to be:
 - predictable
 - suitable for running on multiple VPS nodes
 
-
-
----
+## Key Characteristics
 
 - **Alpine-based**  
   Small image size (~10 MB), minimal attack surface.
@@ -26,8 +24,6 @@ It is designed to be:
 
 The image is built automatically via GitHub Actions and published to GHCR.
 
----
-
 ## Supported Architectures
 
 The image is built for:
@@ -37,9 +33,7 @@ The image is built for:
 - `linux/arm/v7`
 - `linux/arm/v6`
 
----
-
-## Available Images
+Available Images
 
 Images are published to GHCR:
 ghcr.io/rezzorix/simplesocks5:alpine
@@ -61,6 +55,15 @@ services:
       PROXY_USER: yourusername
       PROXY_PASSWORD: yourpassword
 ```
+
+
+Start the container:
+
+```docker compose up -d```
+
+The SOCKS5 proxy will be available at:
+
+```socks5://yourusername:yourpassword@<host-ip>:1080```
 
 ## Configuration Model
 
