@@ -1,9 +1,10 @@
 services:
-  simplesocks5:
+  socks5:
     image: ghcr.io/rezzorix/simplesocks5:latest
-    container_name: simplesocks5
+    container_name: socks5
+    restart: unless-stopped
     ports:
       - "1080:1080"
-    volumes:
-      - ./3proxy.cfg:/etc/3proxy/3proxy.cfg
-    restart: unless-stopped
+    environment:
+      PROXY_USER: yourusername
+      PROXY_PASSWORD: yourpassword
