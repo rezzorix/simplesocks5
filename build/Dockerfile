@@ -1,6 +1,9 @@
-FROM alpine:3.22 AS builder
+ARG ALPINE_VERSION=3.24
+ARG THREEPROXY_VERSION=0.9.8
 
-ENV THREEPROXY_VERSION=0.9.5
+FROM alpine:${ALPINE_VERSION} AS builder
+
+ARG THREEPROXY_VERSION
 
 RUN apk add --no-cache \
     build-base \
@@ -15,14 +18,14 @@ RUN apk add --no-cache \
     install -m 0755 bin/3proxy /usr/local/bin/3proxy && \
     cd / && rm -rf "$DIR"
 
-FROM alpine:3.22
+FROM alpine:${ALPINE_VERSION}
 
 RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /usr/local/bin/3proxy /usr/local/bin/3proxy
 COPY entrypoint.sh /entrypoint.sh
+
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 1080
-
 ENTRYPOINT ["/entrypoint.sh"]
